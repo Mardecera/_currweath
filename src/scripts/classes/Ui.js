@@ -1,13 +1,13 @@
-import { countryDataList, citiesDataList, divResult, inputCity } from "../functions/selectors.js"
+import { countriesDataList, citiesDataList, divResult, inputCity } from "../functions/selectors.js"
 import { createElementHTML } from "../functions/functions.js"
 
 export class UI {
-    showCountriesName(countries) {
+    showCountriesName(countries = []) {
         countries.forEach(country => {
             const option = createElementHTML({
                 type: 'option', value: country.name
             })
-            countryDataList.appendChild(option)
+            countriesDataList.appendChild(option)
         })
     }
 
@@ -21,14 +21,7 @@ export class UI {
         })
     }
 
-    cleanCitiesDataList() {
-        while (citiesDataList.firstChild) {
-            citiesDataList.lastChild.remove()
-        }
-        inputCity.value = ''
-    }
-
-    showWeather({ main, name, wind, weather }) {
+    showWeather({ main = {}, name = '', wind = {}, weather = [] }) {
         this.cleanShowResult()
 
         const tempResult = createElementHTML({
@@ -72,14 +65,18 @@ export class UI {
         divResult.appendChild(additResult)
     }
 
-    showWeatherNotFound(messageError) {
+    showMessageError(messageError = '') {
         this.cleanShowResult()
 
-        const result = createElementHTML({
-            type: 'div',
-            textContent: messageError
-        })
+        const result = createElementHTML({ type: 'div', textContent: messageError })
         divResult.appendChild(result)
+    }
+
+    cleanCitiesDataList() {
+        while (citiesDataList.firstChild) {
+            citiesDataList.lastChild.remove()
+        }
+        inputCity.value = ''
     }
 
     cleanShowResult() {

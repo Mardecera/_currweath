@@ -65,23 +65,19 @@ datalist{
 }
 
 #form-result{
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
     width: 100%;
-    /* display: flex; */
-    /* text-align: center; */
-    padding: 1em;
-    font-size: 2rem;
+    padding: 1em 0;
     color: white;
 }
 
 #form-result > div{
     width: 50%;
     margin: 0 auto;
+    /* font-size: 2rem; */
 }
 
 .temp-result{
+    font-size: 3rem;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: .5rem;

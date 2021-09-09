@@ -1,35 +1,28 @@
 import { UI } from './Ui.js'
 
 const URL = 'https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bcities.json'
+const MESSAGE_WEATHER_NOT_FOUND = `El pais o ciudad ingresados no existen o no tienen relación entre si. :(`
+const MESSAGE_GET_NOT_COUNTRIES = 'No se pudieron cargar los paises! :('
 
-// I need id, name, iso2, iso3, cities[]
+// I need id, name, iso2, cities[]
 
 export class Manager{
     constructor() {
         this.countries = []
-        this.countryIsoSelected
         this.ui = new UI()
     }
 
-    async init() {
-        await this.getCountries()
-    }
+    async init() { await this.getCountries() }
 
-    showCountries() {
-        this.ui.showCountriesName(this.countries)
-    }
+    showCountries() { this.ui.showCountriesName(this.countries) }
 
-    showCitys(event) {
+    showCitys(event = {}) {
         event.preventDefault()
+        const selectedCountryName = event.target.value
 
-        const countrySelectedName = event.target.value
-        const countryExist = this.countries.some(country => country.name == countrySelectedName)
-        if (countryExist) {
-            const countryCities = this.countries.find(country => {
-                return country.name == countrySelectedName
-            })
-            this.countryIsoSelected = countryCities.iso2
-            this.ui.showCitiesName(countryCities.cities)
+        if (this.countryExist(selectedCountryName)) {
+            const citiesOfCountry = this.selectedCountry(selectedCountryName).cities
+            this.ui.showCitiesName(citiesOfCountry)
         }
     }
 
@@ -41,36 +34,46 @@ export class Manager{
             data.forEach(fact => {
                 if (fact.cities.length != 0) {
                     const country = {
-                        id: fact.id,
                         name: fact.name,
                         iso2: fact.iso2,
-                        iso3: fact.iso3,
                         cities: fact.cities
                     }
                     this.countries = [...this.countries, country]
                 }
             })
         } catch (error) {
-            console.log('No se obtuvo los paises...')
+            this.ui.showMessageError(MESSAGE_GET_NOT_COUNTRIES)
             return
         }
     }
 
-    async consult(event, citySelected) {
+    async query(event = {}, selectedCountryName = '', selectedCityName = '') {
         event.preventDefault()
 
         const key = '7c799227f894fbfb20a2a08b6372090f'
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${citySelected},${this.countryIsoSelected}&units=metric&appid=${key}`
+        const isoOfCountry = this.getIsoOfCountry(selectedCountryName)
+        const url = this.getQueryUrl(selectedCityName, isoOfCountry, key)
 
         try {
             const request = await fetch(url)
             const data = await request.json()
             this.ui.showWeather(data)
         } catch (error) {
-            const messageError = `${this.countryIsoSelected} o ${citySelected} no encontradas o relacionadas.`
-            this.ui.showWeatherNotFound(messageError)
-            console.log(error)
+            this.ui.showMessageError(MESSAGE_WEATHER_NOT_FOUND)
             return
-        }     
+        }
+    }
+
+    countryExist(countryName = '') {
+        return this.countries.some(country => country.name === countryName)
+    }
+    selectedCountry(countryName = '') {
+        return this.countries.find(country => country.name === countryName )
+    }
+    getIsoOfCountry(countryName = '') {
+        return this.countryExist(countryName)? this.selectedCountry(countryName).iso2 : undefined
+    }
+    getQueryUrl(cityName = '', isoOfCountry = '', key = '') {
+        return `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${isoOfCountry}&units=metric&appid=${key}`
     }
 }

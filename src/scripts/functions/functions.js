@@ -1,10 +1,10 @@
-function isEmpty(arrayElement) {
+function isEmpty(arrayElement = []) {
     if (typeof arrayElement.length === 'number') {
         return !!!arrayElement.length
     } else{ return false }
 }
 
-function createElementHTML({ type = 'div', classes = [], textContent = '', value = '', src = ''}) {
+function createElementHTML({ type = 'div', classes = [], textContent = '', value = '', src = ''} = {}) {
     const element = document.createElement(type)
     
     if (type === 'option') { element.value = value }

@@ -16,7 +16,7 @@ export class App{
                 this.manager.showCitys(event)
             })
             buttonGo.addEventListener('click', (event) => {
-                this.manager.consult(event, inputCity.value)
+                this.manager.query(event, inputCountry.value, inputCity.value)
             })
         })
     }
