@@ -1,7 +1,7 @@
 import { UI } from './Ui.js'
 
 const URL = 'https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bcities.json'
-const MESSAGE_WEATHER_NOT_FOUND = `El pais o ciudad ingresados no existen o no tienen relación entre si. :(`
+const MESSAGE_WEATHER_NOT_FOUND = `El pais o ciudad ingresados no existen, no tienen relación entre si o no podimos obtener los datos de su clima, intente con otros datos. :(`
 const MESSAGE_GET_NOT_COUNTRIES = 'No se pudieron cargar los paises! :('
 
 // I need id, name, iso2, cities[]
