@@ -1,100 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+
 *, :after, :before{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* outline: .5px solid rgb(255, 255, 255); */
+}
+
+:root{
+    --border-radius: .3em;
+    --padding: 1em;
 }
 
 html{
-    background: linear-gradient(157deg, rgba(100,149,237,1) 0%, rgb(38, 79, 156) 100%);;
+    height: 100%;
+    background: linear-gradient(157deg, rgba(100,149,237,1) 0%, rgb(38, 79, 156) 100%);
+    font-family: 'Nunito', sans-serif;
 }
 
 .content {
     width: 100%;
-    height: 100vh;
-    padding: 2rem;
+    height: 100%;
+}
+
+.container{
+    max-width: min(400px, 90%);
+    margin: 2em auto;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    gap: 2em;
+}
+
+.title{
+    text-align: center;
+    color: rgb(24, 37, 114);
+}
+
+.title h3{
+    color: white;
+    font-size: 1.2rem;
+    font-weight: normal;
 }
 
 .form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 1.5em;
+    border-radius: var(--border-radius);
+}
+
+form label, form input{
+    color: rgb(24, 37, 114);
+}
+
+form .field, form .field input, form #btn-go{
     width: 100%;
-    text-align: center;
 }
 
-input{
+form input, form #btn-go{
+    padding: var(--padding) var(--padding) ;
+    border-radius: var(--border-radius);
+}
+
+input::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+form input{
     border: none;
-    border-radius: .4em;
 }
 
-input[type='submit']{
-    padding: .5em 2em;
+form input:focus{
+    outline: 2px solid rgb(62, 95, 187);
+}
+
+form #btn-go{
+    outline: none;
     cursor: pointer;
-    background-color: rgb(166, 111, 255);
+    background-color: rgb(62, 95, 187);
+    border: none;
     color: white;
 }
 
-input[type='submit']:hover{
-    background-color: rgb(141, 88, 226);
-}
-
-input[type='text']{
-    padding: .5em;
-}
-
-datalist{
-    background-color: white;
-}
-
-.form > form{
-    display: inline-flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: .5em;
-    padding: 1.5em;
-}
-
-.form > form > div:not(:last-child){
-    margin-right: 1em;
+form #btn-go:hover{
+    background-color: rgb(34, 65, 151);
 }
 
 #form-result{
-    width: 100%;
-    padding: 1em 0;
     color: white;
 }
 
-#form-result > div{
-    width: 50%;
-    margin: 0 auto;
-    /* font-size: 2rem; */
-}
-
 .temp-result{
-    font-size: 3rem;
-    text-align: center;
+    width: 100%;
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: .5rem;
-}
-
-.temp-result, .addit-result{
-    padding: 1rem;
+    padding: calc(var(--padding) / 1.5) 0;
+    border-radius: calc(var(--border-radius) / 2);
+    text-align: center;
+    font-size: 2.5rem;
 }
 
 .addit-result{
-    font-size: 1rem;
+    padding: calc(var(--padding) / 1.5) 1em;
 }
 
-.addit-result > span{
+.addit-result span{
     display: block;
-}
-
-.addit-result .name-result{
-    /* font-size: 1.3rem; */
-    font-weight: bold;
-    /* text-align: center; */
-}
-
-/* .result-temp{
     width: 100%;
-    text-align: center;
-} */
+}

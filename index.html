@@ -11,6 +11,7 @@
     <meta name="copyright" content="mardecera">
     <meta name="robots" content="index, follow">
 
+    <link rel="shortcut icon" href="./public/favicon.png" type="image/x-icon">
     <link rel='stylesheet' href='https://pro.fontawesome.com/releases/v5.10.0/css/all.css' integrity='sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p' crossorigin='anonymous'/>
     <link rel='stylesheet' href='./src/styles/general.css'>
     <title>CurrWeath</title>
@@ -18,27 +19,23 @@
 <body>
     <div class="content">
         <div class="container">
-            <div class="form">
-                <form action="">
-                    <div>
-                        <label>
-                            Country: 
-                            <input type="text" list="countries" id="input-countries">
-                            <datalist id="countries"> </datalist>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            City: 
-                            <input type="text" list="cities" id="input-cities">
-                            <datalist id="cities"></datalist>
-                        </label>
-                    </div>
-                    <div>
-                        <input type="submit" value="GO!" id="btn-go">
-                    </div>
-                </form>
+            <div class="title">
+                <h1>CurrWeath</h1>
+                <h3>Find the weather of any city</h3>
             </div>
+            <form class="form">
+                <div class="field">
+                    <label> Country: </label>
+                    <input type="text" list="countries" id="input-countries">
+                    <datalist id="countries"> </datalist>
+                </div>
+                <div class="field">
+                    <label> City: </label>
+                    <input type="text" list="cities" id="input-cities">
+                    <datalist id="cities"></datalist>
+                </div>
+                <input type="submit" value="GO!" id="btn-go">
+            </form>
             <div id="form-result">
             </div>
         </div>

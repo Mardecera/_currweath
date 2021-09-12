@@ -26,7 +26,7 @@ export class UI {
 
         const tempResult = createElementHTML({
             type: 'div',
-            textContent: `${Math.round(main.temp)} ${String.fromCharCode(8451)}`,
+            textContent: `${Math.round(main.temp)} ${String.fromCharCode(176)}C`,
             classes: ['temp-result']
         })
         const imgWeather = createElementHTML({
