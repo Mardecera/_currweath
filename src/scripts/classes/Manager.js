@@ -1,79 +1,86 @@
 import { UI } from './Ui.js'
 
-const URL = 'https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bcities.json'
-const MESSAGE_WEATHER_NOT_FOUND = `El pais o ciudad ingresados no existen, no tienen relación entre si o no pudimos obtener los datos de su clima, intente con otros datos. :(`
-const MESSAGE_GET_NOT_COUNTRIES = 'No se pudieron cargar los paises! :('
-
-// I need id, name, iso2, cities[]
+const MESSAGE_WEATHER_NOT_FOUND = `Couldn't get the weather for this city! 😔`
+const MESSAGE_GET_NOT_COUNTRIES = 'Countries could not be loaded! 😔'
+const MESSAGE_GET_NOT_CITIES = 'Cities could not be loaded! 😔'
 
 export class Manager{
     constructor() {
+        this.key = 'eVFEd01XT0JjM0duMlh0bkdHQmx6aTE0R2NPT1Awa1dBNmo5Tm13WA=='
         this.countries = []
-        this.ui = new UI()
-    }
-
-    async init() { await this.getCountries() }
-
-    showCountries() { this.ui.showCountriesName(this.countries) }
-
-    showCitys(event = {}) {
-        event.preventDefault()
-        const selectedCountryName = event.target.value
-
-        if (this.countryExist(selectedCountryName)) {
-            const citiesOfCountry = this.selectedCountry(selectedCountryName).cities
-            this.ui.showCitiesName(citiesOfCountry)
-        }
+        this.UI = new UI()
     }
 
     async getCountries() {
         try {
-            const request = await fetch(URL)
-            const data = await request.json()
-            
-            data.forEach(fact => {
-                if (fact.cities.length != 0) {
-                    const country = {
-                        name: fact.name,
-                        iso2: fact.iso2,
-                        cities: fact.cities
-                    }
-                    this.countries = [...this.countries, country]
-                }
-            })
+            const request = await fetch(this.getURLCountries(), this.getRequestOptions())
+            const countries = await request.json()
+
+            this.countries = countries
+            this.UI.showCountries(this.countries)
         } catch (error) {
-            this.ui.showMessageError(MESSAGE_GET_NOT_COUNTRIES)
+            this.UI.showMessageError(MESSAGE_GET_NOT_COUNTRIES)
             return
         }
     }
 
-    async query(event = {}, selectedCountryName = '', selectedCityName = '') {
-        event.preventDefault()
+    async getCities(country) {
+        this.UI.cleanCitiesDataList()
+        if (this.countryExist(country)) {
+            const iso2 = this.getIso(country)
+            try {
+                const request = await fetch(this.getURLCitys(iso2), this.getRequestOptions())
+                const cities = await request.json()
 
+                this.UI.showCities(cities)
+            } catch (error) {
+                this.UI.showMessageError(MESSAGE_GET_NOT_CITIES)
+            }
+        }
+    }
+
+    async getWeather({country, city}) {
         const key = '7c799227f894fbfb20a2a08b6372090f'
-        const isoOfCountry = this.getIsoOfCountry(selectedCountryName)
-        const url = this.getQueryUrl(selectedCityName, isoOfCountry, key)
+        const iso = this.getIso(country)
+        const url = this.getURLWeather(city, iso, key)
 
         try {
             const request = await fetch(url)
-            const data = await request.json()
-            this.ui.showWeather(data)
+            const weather = await request.json()
+            this.UI.showWeather(weather, city, country)
         } catch (error) {
-            this.ui.showMessageError(MESSAGE_WEATHER_NOT_FOUND)
+            this.UI.showMessageError(MESSAGE_WEATHER_NOT_FOUND)
             return
         }
     }
 
-    countryExist(countryName = '') {
+    countryExist(countryName) {
         return this.countries.some(country => country.name === countryName)
     }
-    selectedCountry(countryName = '') {
-        return this.countries.find(country => country.name === countryName )
+
+    getIso(countryName) {
+        return this.countries.find(country => country.name === countryName).iso2
     }
-    getIsoOfCountry(countryName = '') {
-        return this.countryExist(countryName)? this.selectedCountry(countryName).iso2 : undefined
+
+    getRequestOptions() {
+        var headers = new Headers()
+        headers.append("X-CSCAPI-KEY", this.key)
+        return {
+            method: 'GET',
+            headers: headers,
+            redirect: 'follow'
+        }
     }
-    getQueryUrl(cityName = '', isoOfCountry = '', key = '') {
-        return `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${isoOfCountry}&units=metric&appid=${key}`
+
+    getURLCitys(iso2) {
+        return `https://api.countrystatecity.in/v1/countries/${iso2}/cities`
+    }
+
+    getURLCountries() {
+        return "https://api.countrystatecity.in/v1/countries"
+    }
+
+    getURLWeather(city, iso, key) {
+        return `https://api.openweathermap.org/data/2.5/weather?q=${city},${iso}&units=metric&appid=${key}`
     }
 }

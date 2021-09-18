@@ -2,7 +2,7 @@ import { countriesDataList, citiesDataList, divResult, inputCity } from "../func
 import { createElementHTML } from "../functions/functions.js"
 
 export class UI {
-    showCountriesName(countries = []) {
+    showCountries(countries) {
         countries.forEach(country => {
             const option = createElementHTML({
                 type: 'option', value: country.name
@@ -11,8 +11,9 @@ export class UI {
         })
     }
 
-    showCitiesName(cities = []) {
+    showCities(cities) {
         this.cleanCitiesDataList()
+        
         cities.forEach(city => {
             const option = createElementHTML({
                 type: 'option', value: city.name
@@ -21,48 +22,14 @@ export class UI {
         })
     }
 
-    showWeather({ main = {}, name = '', wind = {}, weather = [] }) {
+    showWeather({ main = {}, wind = {}, weather = [] }, city, country) {
         this.cleanShowResult()
 
-        const tempResult = createElementHTML({
-            type: 'div',
-            textContent: `${Math.round(main.temp)} ${String.fromCharCode(176)}C`,
-            classes: ['temp-result']
-        })
-        const imgWeather = createElementHTML({
-            type: 'img',
-            src: `https://openweathermap.org/img/w/${weather[0].icon}.png`,
-            classes: ['img-result']
-        })
-        const additResult = createElementHTML({ classes: ['addit-result'] })
-        const spanWeather = createElementHTML({
-            type: 'span',
-            textContent: `Weather: ${weather[0].description}`,
-            classes: ['weather-result']
-        })
-        const spanHumidity = createElementHTML({
-            type: 'span',
-            textContent: `Humidity: ${main.humidity}%`,
-            classes: ['humidity-result']
-        })
-        const spanWind = createElementHTML({
-            type: 'span',
-            textContent: `Wind: from ${Math.round(wind.speed * 3.6)}Km/H`,
-            classes: ['wind-result']
-        })
-        const spanName = createElementHTML({
-            type: 'span',
-            textContent: name,
-            classes: ['name-result']
-        })
+        const weatherTEMP = this.getWeatherTemp(main, weather[0], country, city)
+        const weatherBODY = this.getWeatherBody(main, wind, weather[0])
 
-        tempResult.appendChild(imgWeather)
-        additResult.appendChild(spanName)
-        additResult.appendChild(spanWeather)
-        additResult.appendChild(spanHumidity)
-        additResult.appendChild(spanWind)
-        divResult.appendChild(tempResult)
-        divResult.appendChild(additResult)
+        divResult.appendChild(weatherTEMP)
+        divResult.appendChild(weatherBODY)
     }
 
     showMessageError(messageError = '') {
@@ -70,6 +37,81 @@ export class UI {
 
         const result = createElementHTML({ type: 'div', textContent: messageError })
         divResult.appendChild(result)
+    }
+
+    getWeatherTemp({temp}, weather, country, city) {
+        const tempHTML = createElementHTML({ classes: ['temp-result'] })
+        const tempCity = createElementHTML({
+            classes: ['temp-city'],
+            textContent: `${city}, ${country}`
+        })
+        const tempContainer = createElementHTML({classes: ['temp-container']})
+        const tempValue = createElementHTML({
+            textContent: `${Math.round(temp)} ${String.fromCharCode(176)}C`,
+            classes: ['temp-value']
+        })
+        const tempPicture = createElementHTML({
+            type: 'img',
+            src: `https://openweathermap.org/img/w/${weather.icon}.png`,
+            classes: ['temp-picture']
+        })
+
+        tempContainer.appendChild(tempValue)
+        tempContainer.appendChild(tempPicture)
+        tempHTML.appendChild(tempCity)
+        tempHTML.appendChild(tempContainer)
+
+        return tempHTML
+    }
+    
+    getWeatherBody({ humidity }, { speed }, weather) {
+        const detailsWeatherHTML = createElementHTML({ classes: ['details-result'] })
+        const fieldDetailSky = createElementHTML({classes: ['field']})
+        const fieldDetailHumidity = createElementHTML({classes: ['field']})
+        const fieldDetailWind = createElementHTML({ classes: ['field'] })
+        const spanSkyTitle = createElementHTML({
+            type: 'span',
+            textContent: `Weather:`,
+            classes: ['title']
+        })
+        const spanSkyDetail = createElementHTML({
+            type: 'span',
+            textContent: `${weather.description}`,
+            classes: ['detail']
+        })
+        const spanHumidityTitle = createElementHTML({
+            type: 'span',
+            textContent: `Humidity:`,
+            classes: ['title']
+        })
+        const spanHumidityDetail = createElementHTML({
+            type: 'span',
+            textContent: `${humidity}%`,
+            classes: ['detail']
+        })
+        const spanWindTitle = createElementHTML({
+            type: 'span',
+            textContent: `Wind:`,
+            classes: ['title']
+        })
+        const spanWindDetail = createElementHTML({
+            type: 'span',
+            textContent: `from ${Math.round(speed * 3.6)}Km/H`,
+            classes: ['detail']
+        })
+
+        fieldDetailWind.appendChild(spanWindTitle)
+        fieldDetailWind.appendChild(spanWindDetail)
+        fieldDetailHumidity.appendChild(spanHumidityTitle)
+        fieldDetailHumidity.appendChild(spanHumidityDetail)
+        fieldDetailSky.appendChild(spanSkyTitle)
+        fieldDetailSky.appendChild(spanSkyDetail)
+        
+        detailsWeatherHTML.appendChild(fieldDetailSky)
+        detailsWeatherHTML.appendChild(fieldDetailHumidity)
+        detailsWeatherHTML.appendChild(fieldDetailWind)
+
+        return detailsWeatherHTML
     }
 
     cleanCitiesDataList() {

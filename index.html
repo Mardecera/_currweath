@@ -23,15 +23,15 @@
                 <h1>CurrWeath</h1>
                 <h3>Find the weather of any city</h3>
             </div>
-            <form class="form">
+            <form id="form">
                 <div class="field">
                     <label> Country: </label>
-                    <input type="text" list="countries" id="input-countries">
+                    <input type="text" list="countries" id="input-countries" placeholder="Select any country" required>
                     <datalist id="countries"> </datalist>
                 </div>
                 <div class="field">
                     <label> City: </label>
-                    <input type="text" list="cities" id="input-cities">
+                    <input type="text" list="cities" id="input-cities" placeholder="Select any city" required>
                     <datalist id="cities"></datalist>
                 </div>
                 <input type="submit" value="GO!" id="btn-go">

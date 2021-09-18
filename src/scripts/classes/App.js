@@ -1,23 +1,31 @@
 import { Manager } from "./Manager.js"
-import { inputCountry, inputCity, buttonGo } from "../functions/selectors.js"
+import * as DOM from "../functions/selectors.js"
 
 export class App{
     constructor() {
-        this.manager = new Manager()
+        this.MANAGER = new Manager()
         this.init()
     }
 
     init() {
-        document.addEventListener('DOMContentLoaded', async () => {
-            await this.manager.init()
-            this.manager.showCountries()
+        window.onload = async () => {
+            this.MANAGER.getCountries()
 
-            inputCountry.addEventListener('input', (event) => {
-                this.manager.showCitys(event)
+            DOM.inputCountry.addEventListener('input', (event) => {
+                event.preventDefault()
+                this.MANAGER.getCities(event.target.value)
             })
-            buttonGo.addEventListener('click', (event) => {
-                this.manager.query(event, inputCountry.value, inputCity.value)
+            DOM.form.addEventListener('submit', (event) => {
+                event.preventDefault()
+                this.MANAGER.getWeather(this.getCountryCity())
             })
-        })
+        }
+    }
+
+    getCountryCity() {
+        return {
+            country: DOM.inputCountry.value,
+            city: DOM.inputCity.value
+        }
     }
 }
