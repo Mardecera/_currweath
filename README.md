@@ -8,4 +8,4 @@ App to check the weather by city, you can check it [here](https://currweath.netl
 
 ## Demo
 
-![Alt text](https://github.com/Mardecera/_currweath/tree/main/images/_demo.gif)
+![Alt text](https://raw.githubusercontent.com/Mardecera/_currweath/main/images/_demo.gif)
