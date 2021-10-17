@@ -1,11 +1,18 @@
-import { countriesDataList, citiesDataList, divResult, inputCity } from "../functions/selectors.js"
-import { createElementHTML } from "../functions/functions.js"
+import {
+    countriesDataList,
+    citiesDataList,
+    divResult,
+    inputCity,
+    form,
+} from '../functions/selectors.js'
+import { createElementHTML } from '../functions/functions.js'
 
 export class UI {
     showCountries(countries) {
-        countries.forEach(country => {
+        countries.forEach((country) => {
             const option = createElementHTML({
-                type: 'option', value: country.name
+                type: 'option',
+                value: country.name,
             })
             countriesDataList.appendChild(option)
         })
@@ -13,117 +20,84 @@ export class UI {
 
     showCities(cities) {
         this.cleanCitiesDataList()
-        
-        cities.forEach(city => {
+        form.querySelector('#input-cities').disabled = false
+
+        cities.forEach((city) => {
             const option = createElementHTML({
-                type: 'option', value: city.name
+                type: 'option',
+                value: city.name,
             })
             citiesDataList.appendChild(option)
         })
     }
 
-    showWeather({ main = {}, wind = {}, weather = [] }, city, country) {
+    showWeather({ main, wind, weather }, city, country) {
         this.cleanShowResult()
 
-        const weatherTEMP = this.getWeatherTemp(main, weather[0], country, city)
-        const weatherBODY = this.getWeatherBody(main, wind, weather[0])
+        const template = document.querySelector('#template__result').content
+        const $template = (query) => template.querySelector(query)
+        const src = `https://openweathermap.org/img/w/${weather[0].icon}.png`
+        const temp = `${Math.round(main.temp)} ${String.fromCharCode(176)}C`
+        const windSpeed = `from ${Math.round(wind.speed * 3.6)}Km/h`
 
-        divResult.appendChild(weatherTEMP)
-        divResult.appendChild(weatherBODY)
+        $template('.temp-city').textContent = `${city}, ${country}`
+        $template('.temp-value').textContent = temp
+        $template('.temp-picture').src = src
+        $template('.weather .title').textContent = `Weather:`
+        $template('.humidity .title').textContent = `Humidity:`
+        $template('.wind .title').textContent = `Wind:`
+        $template('.weather .detail').textContent = `${weather[0].description}`
+        $template('.humidity .detail').textContent = `${main.humidity}%`
+        $template('.wind .detail').textContent = windSpeed
+
+        const clone = template.cloneNode(true)
+        divResult.appendChild(clone)
     }
 
     showMessageError(messageError = '') {
         this.cleanShowResult()
 
-        const result = createElementHTML({ type: 'div', textContent: messageError })
+        const result = createElementHTML({
+            type: 'div',
+            textContent: messageError,
+        })
         divResult.appendChild(result)
     }
 
-    getWeatherTemp({temp}, weather, country, city) {
-        const tempHTML = createElementHTML({ classes: ['temp-result'] })
-        const tempCity = createElementHTML({
-            classes: ['temp-city'],
-            textContent: `${city}, ${country}`
-        })
-        const tempContainer = createElementHTML({classes: ['temp-container']})
-        const tempValue = createElementHTML({
-            textContent: `${Math.round(temp)} ${String.fromCharCode(176)}C`,
-            classes: ['temp-value']
-        })
-        const tempPicture = createElementHTML({
-            type: 'img',
-            src: `https://openweathermap.org/img/w/${weather.icon}.png`,
-            classes: ['temp-picture']
-        })
-
-        tempContainer.appendChild(tempValue)
-        tempContainer.appendChild(tempPicture)
-        tempHTML.appendChild(tempCity)
-        tempHTML.appendChild(tempContainer)
-
-        return tempHTML
-    }
-    
-    getWeatherBody({ humidity }, { speed }, weather) {
-        const detailsWeatherHTML = createElementHTML({ classes: ['details-result'] })
-        const fieldDetailSky = createElementHTML({classes: ['field']})
-        const fieldDetailHumidity = createElementHTML({classes: ['field']})
-        const fieldDetailWind = createElementHTML({ classes: ['field'] })
-        const spanSkyTitle = createElementHTML({
-            type: 'span',
-            textContent: `Weather:`,
-            classes: ['title']
-        })
-        const spanSkyDetail = createElementHTML({
-            type: 'span',
-            textContent: `${weather.description}`,
-            classes: ['detail']
-        })
-        const spanHumidityTitle = createElementHTML({
-            type: 'span',
-            textContent: `Humidity:`,
-            classes: ['title']
-        })
-        const spanHumidityDetail = createElementHTML({
-            type: 'span',
-            textContent: `${humidity}%`,
-            classes: ['detail']
-        })
-        const spanWindTitle = createElementHTML({
-            type: 'span',
-            textContent: `Wind:`,
-            classes: ['title']
-        })
-        const spanWindDetail = createElementHTML({
-            type: 'span',
-            textContent: `from ${Math.round(speed * 3.6)}Km/H`,
-            classes: ['detail']
-        })
-
-        fieldDetailWind.appendChild(spanWindTitle)
-        fieldDetailWind.appendChild(spanWindDetail)
-        fieldDetailHumidity.appendChild(spanHumidityTitle)
-        fieldDetailHumidity.appendChild(spanHumidityDetail)
-        fieldDetailSky.appendChild(spanSkyTitle)
-        fieldDetailSky.appendChild(spanSkyDetail)
-        
-        detailsWeatherHTML.appendChild(fieldDetailSky)
-        detailsWeatherHTML.appendChild(fieldDetailHumidity)
-        detailsWeatherHTML.appendChild(fieldDetailWind)
-
-        return detailsWeatherHTML
-    }
-
     cleanCitiesDataList() {
-        while (citiesDataList.firstChild) {
-            citiesDataList.lastChild.remove()
-        }
+        while (citiesDataList.firstChild) citiesDataList.lastChild.remove()
         inputCity.value = ''
+        // inputCity.disabled = true
     }
 
     cleanShowResult() {
-        while (divResult.firstChild) {
-            divResult.lastChild.remove()
-        }
+        while (divResult.firstChild) divResult.lastChild.remove()
+    }
+
+    disabledCitys() {
+        if (!inputCity.disabled) inputCity.disabled = true
+    }
+
+    addLoader(query, message) {
+        const template = document.querySelector('#template__loader').content
+        template.querySelector('p').textContent = message
+        const clone = template.cloneNode(true)
+
+        this.cleanShowResult()
+        document.querySelector(query).appendChild(clone)
+    }
+
+    quitLoader(query) {
+        this.cleanShowResult()
+        const textHTML = document.createElement('p')
+        textHTML.textContent = 'Find the climate of a city in the world 🧐.'
+        divResult.appendChild(textHTML)
+    }
+
+    messageResult(message) {
+        this.cleanShowResult()
+        const textHTML = document.createElement('p')
+        textHTML.textContent = message
+        divResult.appendChild(textHTML)
     }
 }
