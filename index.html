@@ -4,6 +4,7 @@
     <meta charset='UTF-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>CurrWeath</title>
     
     <meta name="description" content="Apps para la consulta del clima de una ciudad">
     <meta name="keywords" content="weather, app, clima, city, country">
@@ -12,9 +13,9 @@
     <meta name="robots" content="index, follow">
 
     <link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
-    <link rel='stylesheet' href='https://pro.fontawesome.com/releases/v5.10.0/css/all.css' integrity='sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p' crossorigin='anonymous'/>
     <link rel='stylesheet' href='./styles/general.css'>
-    <title>CurrWeath</title>
+    <link rel='stylesheet' href='https://pro.fontawesome.com/releases/v5.10.0/css/all.css' integrity='sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p' crossorigin='anonymous'/>
+    <script src='./scripts/app.js' type='module' defer></script>
 </head>
 <body>
     <div class="content">
@@ -23,7 +24,7 @@
                 <h1>CurrWeath</h1>
                 <h3>Find the weather of any city</h3>
             </div>
-            <form id="form">
+            <form id="form" autocomplete="off">
                 <div class="field">
                     <label> Country: </label>
                     <input type="text" list="countries" id="input-countries" placeholder="Select any country" required>
@@ -31,15 +32,42 @@
                 </div>
                 <div class="field">
                     <label> City: </label>
-                    <input type="text" list="cities" id="input-cities" placeholder="Select any city" required>
+                    <input type="text" list="cities" id="input-cities" placeholder="Select any city" required disabled>
                     <datalist id="cities"></datalist>
                 </div>
                 <input type="submit" value="GO!" id="btn-go">
             </form>
             <div id="form-result">
+                <p>Find the climate of a city in the world 🧐.</p>
             </div>
         </div>
     </div>
+    <template id="template__result">
+        <div class="temp-result">
+            <div class="temp-city"></div>
+            <div class="temp-container">
+                <div class="temp-value"></div>
+                <img src="" alt="Something" class="temp-picture">
+            </div>
+        </div>
+        <div class="details-result">
+            <div class="field weather">
+                <span class="title"></span><span class="detail"></span>
+            </div>
+            <div class="field humidity">
+                <span class="title"></span><span class="detail"></span>
+            </div>
+            <div class="field wind">
+                <span class="title"></span><span class="detail"></span>
+            </div>
+        </div>
+    </template>
+    <template id="template__loader">
+        <div class="lds-ellipsis">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <p></p>
+    </template>
 </body>
-<script src='./scripts/app.js' type='module'></script>
+<!-- <script src='./scripts/app.js' type='module'></script> -->
 </html>

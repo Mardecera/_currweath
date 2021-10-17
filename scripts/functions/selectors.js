@@ -10,10 +10,11 @@ const form = $('#form')
 
 export {
     countriesDataList,
+    citiesDataList,
     inputCountry,
     inputCity,
-    citiesDataList,
-    buttonGo,
     divResult,
-    form
+    buttonGo,
+    form,
+    $,
 }

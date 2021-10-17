@@ -1,7 +1,7 @@
-import { Manager } from "./Manager.js"
-import * as DOM from "../functions/selectors.js"
+import { Manager } from './Manager.js'
+import * as DOM from '../functions/selectors.js'
 
-export class App{
+export class App {
     constructor() {
         this.MANAGER = new Manager()
         this.init()
@@ -25,7 +25,7 @@ export class App{
     getCountryCity() {
         return {
             country: DOM.inputCountry.value,
-            city: DOM.inputCity.value
+            city: DOM.inputCity.value,
         }
     }
 }
